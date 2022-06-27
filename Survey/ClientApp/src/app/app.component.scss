@@ -1,0 +1,50 @@
+.vertical-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    align-items: flex-start;
+}
+
+.vertical-radio-button {
+    margin: 5px;
+}
+
+.sample-wrapper {
+    /*display: flex;*/
+
+
+    .sample-item {
+        display: inline-block;
+        padding: 15px;
+        width: 320px;
+
+        audio {
+            margin: 10px 10px 0;
+        }
+
+        label {
+            display: flex;
+            /*width: calc(100% - 300px);*/
+            justify-content: space-between;
+            flex-basis: 100%;
+            padding-top: 10px;
+            /*padding-left: 300px;*/
+            /*display: block;*/
+        }
+
+        mat-radio-group {
+            display: flex;
+            /*width: 100%;*/
+            flex-basis: 100%;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px 20px;
+
+        }
+    }
+}
+
+.break {
+    flex-basis: 100%;
+    height: 0;
+}

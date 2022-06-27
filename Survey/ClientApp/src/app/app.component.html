@@ -1,0 +1,103 @@
+<mat-stepper (selectionChange)="onMove($event)" orientation="vertical" linear="true" #stepper>
+    <mat-step>
+        <ng-template matStepLabel>Introduction</ng-template>
+        <p>
+            DISCLAIMER: By participating in this survey, you agree to the anonymous processing of your data for academic purposes.
+            No information which can be lead directly to your person will be recorded or published.
+        </p>
+        <p>
+            In this survey you will be asked to rate samples of classical piano music on how "human" they sound,
+            please make sure you have some headphones connected before you start.<br /><br />
+            Before we begin, we'll first ask a few general questions about your musical experience.
+        </p>
+        <div>
+            <button mat-raised-button matStepperNext color="primary">Begin</button>
+        </div>
+    </mat-step>
+    <mat-step [stepControl]="participantForm">
+        <form [formGroup]="participantForm">
+            <ng-template matStepLabel>Questionnaire</ng-template>
+            <mat-form-field class="mt">
+                <mat-label>How old are you?</mat-label>
+                <input matInput formControlName="age" placeholder="Age" type="number" required>
+                <mat-hint>in years</mat-hint>
+            </mat-form-field>
+            <br /><br/>
+            <mat-label class="mt">What best describes your experience as a musician?</mat-label>
+            <mat-radio-group class="vertical-radio-group" matInput formControlName="experience" required>
+                <mat-radio-button class="vertical-radio-button" value="none">I have little or no experience playing an instrument.</mat-radio-button>
+                <mat-radio-button class="vertical-radio-button" value="some">I have experience playing an instrument, but I'm not classically trained.</mat-radio-button>
+                <mat-radio-button class="vertical-radio-button" value="classical">I am a classically trained musician.</mat-radio-button>
+            </mat-radio-group>
+            <mat-label class="mt">How often do you listen to classical music?</mat-label>
+            <mat-radio-group class="vertical-radio-group" matInput formControlName="listening" required>
+                <mat-radio-button class="vertical-radio-button" value="never">I never listen to classical music.</mat-radio-button>
+                <mat-radio-button class="vertical-radio-button" value="occasional">I occasionaly listen to classical music.</mat-radio-button>
+                <mat-radio-button class="vertical-radio-button" value="frequent">I frequently listen to classical music</mat-radio-button>
+            </mat-radio-group>
+            <div class="mt">
+                <button mat-raised-button matStepperNext color="primary" [disabled]="!participantForm.valid">Next</button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="mainForm">
+        <form [formGroup]="mainForm">
+            <ng-template matStepLabel>Survey</ng-template>
+            <mat-stepper linear #substepper class="hide-banner" (selectionChange)="onProgress($event)">
+                <mat-step>
+                    <p>
+                        Now, the main survey will begin. At each step you will hear three different samples of the same piece of classical piano music.
+                        You will be asked to give each sample a rating from 1 to 5 for how much it sounds like a (professional) human performance.
+                        In this context a score of 1 means that the sample sounds very robotic and not very musical, and a score of 5 means that it sounds
+                        like a proper, human performance.
+                        <br /> <br />
+                        Note: All samples are generated using performance data and piano samples, this means that even human recordings would not completely
+                        sound like a real piano.
+                    </p>
+                    <button mat-raised-button matStepperNext color="primary">Start</button>
+                </mat-step>
+                <mat-step [stepControl]="sample" *ngFor="let sample of sampleControls; let i = index" [formGroup]="sample">
+                    <ng-template matStepLabel>Sample {{i}} out of {{samples.length}}</ng-template>
+
+                    <p class="mt">
+                        Please listen to each of the three samples and score them on how human the performance sounds.
+                    </p>
+
+                    <div class="sample-wrapper">
+                        <div *ngFor="let folder of sampleFolders(sample)" class="sample-item">
+                            <audio controls>
+                                <source [src]="getSrc(folder, sample)" type="audio/mp3">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <div class="break"></div>
+                            <label><span class="start">Very Robotic</span><span class="end">Completely human</span></label>
+                            <div class="break"></div>
+                            <mat-radio-group matInput [formControlName]="folder" required>
+                                <mat-radio-button value="1"></mat-radio-button>
+                                <mat-radio-button value="2"></mat-radio-button>
+                                <mat-radio-button value="3"></mat-radio-button>
+                                <mat-radio-button value="4"></mat-radio-button>
+                                <mat-radio-button value="5"></mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext [disabled]="!sample.valid" color="primary" *ngIf="i + 1 < samples.length">Next</button>
+                    </div>
+                </mat-step>
+            </mat-stepper>
+
+            <mat-progress-bar class="mt mb" mode="determinate" [value]="currentProgress"></mat-progress-bar>
+            <div *ngIf="mainForm.valid">
+                <button mat-raised-button matStepperNext color="primary" (click)="save()" style="margin-left: 15px;">Finish</button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step disabled>
+        <ng-template matStepLabel>Completed</ng-template>
+        <p class="mt">You are now done, thank you very much for participating.</p>
+    </mat-step>
+</mat-stepper>
