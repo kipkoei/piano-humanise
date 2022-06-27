@@ -1,5 +1,5 @@
 # Adding a human touch to piano score
-## Lou Baudoin
+By Lou Baudoin
 
 This repository contains the code for my bachelor thesis. The scripts in this directory are mostly used for convenience and evaluation purposes and should be edited to point to the appropriate directories for the model and data. The most important of these is [humanize.py](humanize.py), since it provides an easy way to quantise and subsequently humanise MIDI files. The included example files are from the validation split of the [MAESTRO dataset](https://magenta.tensorflow.org/datasets/maestro#v300) and were used when developing the model to evaluate the performance.
 
@@ -16,12 +16,19 @@ Once that's done, add the scripts from [magenta-music_vae](magenta-music_vae/) t
 ## Useful commands
 
 To convert all MIDI files in a directory to a tfrecord for training or evaluating (run [split.py](split.py) first):
+
 `convert_dir_to_note_sequences --input_dir=data/train --output_file=data/processed/train.tfrecord --recursive`
+
 `convert_dir_to_note_sequences --input_dir=data/validation --output_file=data/processed/validation.tfrecord --recursive`
 
 To train the model:
+
 `music_vae_train --config=lbau_2bar --run_dir=models/lbau_2bar/ --mode=train`
+
 And run evaluation (concurrently):
+
 `music_vae_train --config=lbau_2bar_eval --run_dir=models/lbau_2bar/ --mode=eval`
+
 To keep track of training and evaluation, it's a good idea to launch tensorboard:
+
 `tensorboard --logdir models/lbau_2bar_big/train`
